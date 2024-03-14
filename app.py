@@ -111,17 +111,17 @@ with open('data/users_data_online.json', 'r') as f:
     df_users['diferencia'] = pd.to_numeric(df_users.groupby('id')['fecha'].diff().dt.days)
     df_admins['diferencia'] = pd.to_numeric(df_admins.groupby('id')['fecha'].diff().dt.days)
 
-    media_users = df_users.groupby('id')['diferencia'].mean()
-    media_users['tiempo'] = df_users['diferencia']
-    media_users.drop(['diferencia'])
+    media_users = df_users.groupby('user_id')['diferencia'].mean().reset_index()
+    media_admins = df_admins.groupby('user_id')['diferencia'].mean().reset_index()
 
-    media_admins = df_admins.groupby('id')['diferencia'].mean()
-    media_admins['tiempo'] = df_admins['diferencia']
-    media_admins.drop(['diferencia'])
+    media_users.rename(columns={'diferencia': 'tiempo'}, inplace=True)
+    media_admins.rename(columns={'diferencia': 'tiempo'}, inplace=True)
 
-    print("Media de tiempo medio entre cambios de contraseña por usuario normal: " + media_users)
-    print("Media de tiempo medio entre cambios de contraseña por usuario administrador: " + media_admins)
 
+    print("Media de tiempo medio entre cambios de contraseña por usuario normal: ")
+    print(media_users)
+    print("Media de tiempo medio entre cambios de contraseña por usuario administrador: ")
+    print(media_admins)
     plt.figure(figsize=(25, 16))
 
     plt.subplot(1, 2, 1)
