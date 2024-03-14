@@ -52,19 +52,15 @@ with open('data/users_data_online.json', 'r') as f:
                 "emails_clickados TEXT"
                 ");")
     con.commit()
-    cur.execute("CREATE TABLE IF NOT EXISTS fechas("
+    cur.execute("CREATE TABLE IF NOT EXISTS fechas_ips("
                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "fecha TEXT,"
-                "user_id TEXT,"
-                "FOREIGN KEY (user_id) REFERENCES usuarios(id)"
-                ");")
-    con.commit()
-    cur.execute("CREATE TABLE IF NOT EXISTS ips("
-                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "ip TEXT,"
                 "user_id TEXT,"
                 "FOREIGN KEY (user_id) REFERENCES usuarios(id)"
                 ");")
+    con.commit()
+
     con.commit()
 
     nclaves = datos["usuarios"][0].keys
@@ -77,17 +73,15 @@ with open('data/users_data_online.json', 'r') as f:
                     (clave,elem[clave]['telefono'], elem[clave]['contrasena'],
                      elem[clave]['provincia'], elem[clave]['permisos'], int(elem[clave]['emails']['total']), int(elem[clave]['emails']['phishing']), int(elem[clave]['emails']['cliclados'])))
         con.commit()
+        i = 0
         fechas = elem[clave]["fechas"]
         for fecha in fechas:
-            cur.execute("INSERT OR IGNORE INTO fechas (user_id, fecha)" \
-                        "VALUES ('%s', '%s')" %
-                        (clave, fecha))
+            cur.execute("INSERT OR IGNORE INTO fechas_ips (fecha, ip, user_id)" \
+                        "VALUES ('%s', '%s', '%s')" %
+                        (fecha, elem[clave]["ips"][i], clave))
+            if elem[clave]["ips"] != "None":
+                i += 1
             con.commit()
-        ips = elem[clave]["ips"]
-        for ip in ips:
-            cur.execute("INSERT OR IGNORE INTO ips (ip, user_id)" \
-                        "VALUES ('%s', '%s')" %
-                        (ip, clave))
 
     con.close()
 
