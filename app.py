@@ -27,9 +27,6 @@ with open('data/legal_data_online.json', 'r') as f:
     claves = datos["legal"][0].keys
     for elem in datos["legal"]:
         clave = list(elem.keys())[0]
-        print(clave)
-        print(elem[clave]["cookies"])
-
         cur.execute("INSERT OR IGNORE INTO legal (id, cookies, aviso, proteccion_de_datos, creacion)"\
                     "VALUES ('%s','%d','%d','%d','%d')" %
                     (clave, int(elem[clave]['cookies']), int(elem[clave]['aviso']), int(elem[clave]['proteccion_de_datos']), int(elem[clave]['creacion'])))
@@ -87,51 +84,7 @@ with open('data/users_data_online.json', 'r') as f:
             con.commit()
 
     con.close()
+    ejercicio4.ej4_1()
 
-    con = sqlite3.connect('datos.db')
-
-    q_users = ("SELECT * FROM fechas_ips "
-               "WHERE user_id IN "
-               "(SELECT id FROM usuarios WHERE permisos == '0');")
-
-    q_admins = ("SELECT * FROM fechas_ips "
-                "WHERE user_id IN "
-                "(SELECT id FROM usuarios  WHERE permisos == '1');")
-
-    df_users = pd.read_sql_query(q_users, con)
-    df_admins = pd.read_sql_query(q_admins, con)
-
-    df_users['fecha'] = pd.to_datetime(df_users['fecha'], format="%d/%m/%Y")
-    df_admins['fecha'] = pd.to_datetime(df_admins['fecha'], format="%d/%m/%Y")
-
-    # Ordenar los DataFrames segun el nombre de usuario y la fecha
-    df_users = df_users.sort_values(by=['id', 'fecha'])
-    df_admins = df_admins.sort_values(by=['id', 'fecha'])
-
-    df_users['diferencia'] = pd.to_numeric(df_users.groupby('id')['fecha'].diff().dt.days)
-    df_admins['diferencia'] = pd.to_numeric(df_admins.groupby('id')['fecha'].diff().dt.days)
-
-    media_users = df_users.groupby('user_id')['diferencia'].mean().reset_index()
-    media_admins = df_admins.groupby('user_id')['diferencia'].mean().reset_index()
-
-    media_users.rename(columns={'diferencia': 'tiempo'}, inplace=True)
-    media_admins.rename(columns={'diferencia': 'tiempo'}, inplace=True)
-
-
-    print("Media de tiempo medio entre cambios de contraseña por usuario normal: ")
-    print(media_users)
-    print("Media de tiempo medio entre cambios de contraseña por usuario administrador: ")
-    print(media_admins)
-    plt.figure(figsize=(25, 16))
-
-    plt.subplot(1, 2, 1)
-    plt.title('Tiempo medio trascurrido en días ara usuarios normales')
-    media_users.plot(kind='bar', x='user_id', y='tiempo', color='aqua')
-
-    plt.subplot(1, 2, 2)
-    plt.title('Tiempo medio trascurrido en días ara usuarios admin')
-    media_admins.plot(kind='bar', x='user_id', y='tiempo', color='magenta')
-
-    plt.show()
 
 
