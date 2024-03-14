@@ -84,7 +84,7 @@ with open('data/users_data_online.json', 'r') as f:
             con.commit()
 
     con.close()
-    ejercicio4.ej4_1()
+    ejercicio4.ej4_3()
 
 
 

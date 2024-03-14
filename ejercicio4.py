@@ -66,6 +66,38 @@ def ej4_1():
     plt.show()
 
 def ej4_2():
-    
+    print("hola")
+
+
+def ej4_3():
+    #conectamos la base de datos
+    con = sqlite3.connect('datos.db')
+
+    #Se realiza la consulta y se saca el dataframe
+    q_webs='SELECT id, cookies, aviso, proteccion_de_datos FROM legal;'
+    df_webs = pd.read_sql_query(q_webs, con)
+
+    #Se calcula la cantidad de políticas deprecated
+    df_webs['deprecated'] = df_webs[['cookies','aviso','proteccion_de_datos']].apply(lambda row: sum(row==0), axis=1)
+
+    #nombre de la gráfica
+    df_webs = df_webs.set_index('id')
+    print(df_webs)
+
+    #ordenar las webs según deprecated (cogemos 5 primeros)
+    df_webs.sort_values(by=['deprecated'], inplace=True, ascending=False)
+    first_five = df_webs.head(5)
+
+    #crear gráfico de barras correspondientes
+    first_five.plot(kind='bar')
+    plt.title('politicas desactualizadas')
+    plt.xlabel('Página web')
+    plt.ylabel('estado')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+    #cerrar base de datos
+    con.close()
+
 
 
