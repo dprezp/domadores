@@ -66,7 +66,34 @@ def ej4_1():
     plt.show()
 
 def ej4_2():
-    print("hola")
+    con = sqlite3.connect('datos.db')
+
+    q_inseguro = ("SELECT id, emails_clickados, emails_phishing  "
+                  "FROM usuarios WHERE segura IS 0 AND emails_clickados IS NOT 0 "
+                  "AND emails_phishing IS NOT 0 ;")
+
+    df_inseguro = pd.read_sql_query(q_inseguro, con)
+
+    # Calcular probabilidad de éxito para ataques de phishing
+    df_inseguro['probabilidad'] = df_inseguro['emails_clickados'] / df_inseguro['emails_phishing'] * 100
+    df_inseguro.sort_values(by='probabilidad', ascending=False, inplace=True)
+
+    # Seleccionar los primeros 10 usuarios con más probabilidad
+    df_inseguro = df_inseguro.head(10)
+
+    # Imprimirlos por pantalla
+    print(df_inseguro)
+
+    # Crear el grafico de probabilidad por usuario
+    df_inseguro.plot(kind='bar', x='id', y='probabilidad', color='black')
+    plt.title("Usuarios más criticos")
+    plt.xlabel("Usuario")
+    plt.ylabel("Probabilidad de clickar un correo spam (%)")
+    plt.xticks(rotation=45, ha='right')  # Rotar los nombres de usuario para mayor legibilidad
+    plt.tight_layout()
+    plt.show()
+
+    con.close()
 
 
 def ej4_3():
