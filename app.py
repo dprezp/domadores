@@ -18,6 +18,6 @@ tablas.crearUsers()
 
 #ejercicio4.ej4_1()
 #ejercicio4.ej4_2()
-ejercicio4.ej4_3()
-
-
+#ejercicio4.ej4_3()
+#ejercicio4.ej4_4()
+tablas.consultas()
