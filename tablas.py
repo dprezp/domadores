@@ -108,7 +108,7 @@ def crearUsers():
 
         con.close()
 
-def consultas():
+def consultas2():
 
     #CONSULTAS EJ 2
     #conexion a la base de datos
@@ -165,6 +165,81 @@ def consultas():
     print(df_admins['emails_clickados'].max())
     print("Mínimo:", end="")
     print(df_admins['emails_clickados'].min())
-
     con.close()
 
+def consultas3():
+    # CONSULTAS EJ 3
+    # conexion a la base de datos
+    con = sqlite3.connect('datos.db')
+
+    # Hacemos las consultas para sacar los dataFrames
+    #separamos por grupos en funcion de los permisos
+    q_users = "SELECT * FROM usuarios WHERE permisos = '0'"
+    q_admin = "SELECT * FROM usuarios WHERE permisos = '1'"
+
+    #sacamos los dataFrames
+    df_users = pd.read_sql_query(q_users, con)
+    df_admin = pd.read_sql_query(q_admin, con)
+
+    # Numero de apariciones de Phishing en ambos grupos
+    print("El numero de apariciones de phishing en usuarios con permisos '0'")
+    print("Apariciones: ", end='')
+    print(df_users['emails_phishing'].sum())
+
+    print("El numero de apariciones de phishing de usuarios con permisos '1'")
+    print("Apariciones: ", end='')
+    print(df_admin['emails_phishing'].sum())
+
+    # Numero de valores ausentes de phishing en ambos grupos
+    print("El numero de valores ausentes de phishing en usuarios con permisos '0'")
+    print("Ausencias: ", end='')
+    print(df_users['emails_phishing'].isnull().sum())
+
+    print("El numero de valores ausentes de phishing de usuarios con permisos '1'")
+    print("Ausencias: ", end='')
+    print(df_admin['emails_phishing'].isnull().sum())
+
+    # Mediana de phishing encontrado en los usuarios de ambos grupos
+    print("La mediana de phishing en usuarios con permisos '0'")
+    print("Mediana: ", end='')
+    print(df_users['emails_phishing'].median())
+
+    print("La mediana de phishing de usuarios con permisos '1'")
+    print("Mediana: ", end='')
+    print(df_admin['emails_phishing'].median())
+
+    # Media de phishing encontrado en los usuarios de ambos grupos
+    print("La media de phishing en usuarios con permisos '0'")
+    print("Media: ", end='')
+    print(round(df_users['emails_phishing'].mean(), 2))
+
+    print("La media de phishing de usuarios con permisos '1'")
+    print("Media: ", end='')
+    print(round(df_admin['emails_phishing'].mean(), 2))
+
+    # Varianza de phishing encontrado en los usuarios de ambos grupos
+    print("La varianza de phishing en usuarios con permisos '0'")
+    print("Varianza: ", end='')
+    print(round(df_users['emails_phishing'].var(), 2))
+
+    print("La varianza de phishing de usuarios con permisos '1'")
+    print("Varianza: ", end='')
+    print(round(df_admin['emails_phishing'].var(), 2))
+
+    # Valor maximo de phishing encontrado en los usuarios de ambos grupos
+    print("Valor maximo de phishing en usuarios con permisos '0'")
+    print("Valor maximo: ", end='')
+    print(df_users['emails_phishing'].max())
+
+    print("Valor maximo de phishing de usuarios con permisos '1'")
+    print("Valor maximo: ", end='')
+    print(df_admin['emails_phishing'].max())
+
+    # Valor minimo de phishing encontrado en los usuarios de ambos grupos
+    print("Valor minimo de phishing en usuarios con permisos '0'")
+    print("Valor minimo: ", end='')
+    print(df_users['emails_phishing'].min())
+
+    print("Valor minimo de phishing de usuarios con permisos '1'")
+    print("Valor minimo: ", end='')
+    print(df_admin['emails_phishing'].min())
