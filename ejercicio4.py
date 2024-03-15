@@ -126,5 +126,29 @@ def ej4_3():
     #cerrar base de datos
     con.close()
 
+def ej4_4():
+    con = sqlite3.connect('datos.db')
+
+    #Se realiza la consulta y se saca el dataframe como en el ejercicio anterior
+    q_webs='SELECT id, cookies, aviso, proteccion_de_datos, creacion FROM legal;'
+    df_webs = pd.read_sql_query(q_webs, con)
+
+    #Creamos un distintivo de politicas de seguridad
+    df_webs['dist'] = (df_webs['proteccion_de_datos'] == 1) & (df_webs['aviso'] == 1) & (df_webs['cookies'] == 1)
+
+    #lo ordenamos por año de creación y con el distintivo
+    df_webs_ordenado = df_webs.groupby(['creacion','dist']).size().unstack()
+    print(df_webs_ordenado)
+
+    #Sacamos el gráfico
+    df_webs_ordenado.plot(kind='bar')
+    plt.title('Web que cumplen todas las politicas de seguridad ordenadas en años ')
+    plt.xlabel('Creación')
+    plt.ylabel('cantidad de webs')
+    plt.legend(['No cumplen', 'Si cumplen'])
+    plt.tight_layout()
+    plt.show()
+    con.close()
+
 
 
