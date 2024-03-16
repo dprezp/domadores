@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Ejercicio 4.1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .chart {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Comparativa media de tiempo entre cambios de contraseña</h1>
+
+    <div class="container">
+        <div class="chart">
+            <h2>Tiempo medio trascurrido en días para usuarios normales</h2>
+            <img src="data:image/png;base64,{{ data_uri_users }}" alt="Usuarios normales">
+        </div>
+        <div class="chart">
+            <h2>Tiempo medio trascurrido en días para usuarios admin</h2>
+            <img src="data:image/png;base64,{{ data_uri_admins }}" alt="Usuarios admin">
+        </div>
+    </div>
+
+    <div class="container">
+        <div>
+            <h2>Usuarios normales</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Tiempo Medio (días)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in media_users.values %}
+                        <tr>
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h2>Usuarios admin</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Tiempo Medio (días)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in media_admins.values %}
+                        <tr>
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="btn-container text-center">
+            <a href="/ejercicio4" class="btn btn-primary">Volver a pagina de ejercicio 4</a>
+            <a href="/" class="btn btn-primary">Volver a pagina principal</a>
+        </div>
+    </div>
+</body>
+</html>

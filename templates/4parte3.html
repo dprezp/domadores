@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Resultados Ejercicio 4.3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .chart {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .table-container {
+            margin: 0 auto;
+            width: 80%; /* Ajusta el ancho según sea necesario */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Políticas desactualizadas</h1>
+
+    <div class="chart">
+        <img src="data:image/png;base64,{{ data_uri }}" alt="Gráfico de políticas desactualizadas">
+    </div>
+
+    <h2>Datos de las primeras cinco políticas desactualizadas</h2>
+    <div class="table-container">
+        {{ html_data | safe }}
+        <div class="btn-container text-center">
+                <a href="/ejercicio4" class="btn btn-primary">Volver a pagina de ejercicio 4</a>
+                <a href="/" class="btn btn-primary">Volver a pagina principal</a>
+        </div>
+    </div>
+</body>
+</html>
