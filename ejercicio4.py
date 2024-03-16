@@ -107,13 +107,13 @@ def ej4_3():
     #Se calcula la cantidad de políticas deprecated
     df_webs['deprecated'] = df_webs[['cookies','aviso','proteccion_de_datos']].apply(lambda row: sum(row==0), axis=1)
 
+    # ordenar las webs según deprecated (cogemos 5 primeros)
+    df_webs.sort_values(by=['deprecated'], inplace=True, ascending=False)
+    first_five = df_webs.head(5)
+
     #nombre de la gráfica
     df_webs = df_webs.set_index('id')
     print(df_webs)
-
-    #ordenar las webs según deprecated (cogemos 5 primeros)
-    df_webs.sort_values(by=['deprecated'], inplace=True, ascending=False)
-    first_five = df_webs.head(5)
 
     #crear gráfico de barras correspondientes
     first_five.plot(kind='bar')
