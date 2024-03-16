@@ -1,8 +1,16 @@
 import sqlite3
 import json
 import hashlib as hash
-
+import os
 import pandas as pd
+
+
+def init():
+    if os.path.exists('datos.db'):
+        os.remove('datos.db')
+
+    crearLegal()
+    crearUsers()
 
 
 def crearLegal():
@@ -30,12 +38,6 @@ def crearLegal():
                          int(elem[clave]['proteccion_de_datos']), int(elem[clave]['creacion'])))
             con.commit()
     con.close()
-
-
-# Para saber si el usuario tiene una contraseña segura o no
-# (que aparezca enla lista de contraseñas comunes)
-def esSegura(contrasena, hash):
-    return contrasena in hash
 
 
 # Hashea las contraseñas más comunes en el diccionario SmallRockyou
@@ -84,7 +86,7 @@ def crearUsers():
 
             # Para saber si el usuario tiene una contraseña segura o no
             seguridad = 0
-            if elem[clave]['contrasena'] not in hashesInseguros:
+            if elem[clave]['contrasena'] not in hashesInseguros: # Si no esta en el set de hashes inseguros, es segura
                 seguridad = 1
 
             cur.execute(
@@ -106,64 +108,50 @@ def crearUsers():
 
         con.close()
 
+
 def consultas2():
 
-    #CONSULTAS EJ 2
-    #conexion a la base de datos
+    # CONSULTAS EJ 2
+    # conexion a la base de datos
     con = sqlite3.connect('datos.db')
 
-    #Hacemos las consultas para sacar los dataFrames
+    # Hacemos las consultas para sacar los dataFrames
     q_users = "SELECT * FROM usuarios"
     q_fechas = "SELECT * FROM fechas_ips WHERE user_id IN(SELECT id FROM usuarios)"
     q_admin = "SELECT * FROM usuarios WHERE permisos IS 1"
 
-    #sacamos los dataFrames
+    # sacamos los dataFrames
     df_users = pd.read_sql_query(q_users, con)
     df_fechas = pd.read_sql_query(q_fechas, con)
     df_admins = pd.read_sql_query(q_admin,con)
 
+    data = {}  # podriamos hacerlo de golpe, pero asi queda mas visual y sencillo de entender
 
-    #Numero de muestras
-    print("Número de muestras de usuarios:", end ="")
-    print(df_users['id'].count(),end ="\n")
-    print("Número de muestras de fechas_ips:", end ="")
-    print(df_fechas['id'].count(),end="\n")
+    # Numero de muestras
+    data["muestras_users"] = df_users['id'].count()
+    data["muestras_fechas"] = df_fechas['id'].count()
 
-    #Media y desviación estándar del total de fecahs en las que se ha cambiado la contraseña
-    print("Media y desviación estándar del total de fechas en las que se ha cambiado la contraseña")
-    print("Media:",end="")
-    print(df_fechas.groupby('user_id').count().mean()['fecha'])
-    print("Desviación estandar",end="")
-    print(df_fechas.groupby('user_id').count().std()['fecha'])
+    # Media y desviación estándar del total de fecahs en las que se ha cambiado la contraseña
+    data["media_fechas"] = df_fechas.groupby('user_id').count().mean()['fecha']
+    data["desviacion_fechas"] = df_fechas.groupby('user_id').count().std()['fecha']
 
-    #Media y desviacón estándar del total de IPS que se han detectado
-    print("Media y desviacón estándar del total de IPS que se han detectado")
-    print("Media:",end="")
-    print(df_fechas.groupby('user_id').count().mean()['ip'])
-    print("Desviación estandar", end="")
-    print(df_fechas.groupby('user_id').count().std()['ip'])
+    # Media y desviacón estándar del total de IPS que se han detectado
+    data["media_ips"] = df_fechas.groupby('user_id').count().mean()['ip']
+    data["desviacion_ips"] = df_fechas.groupby('user_id').count().std()['ip']
 
-    #Media y desviación estándar del número de emails recibidos de phishing en los que ha interactuado cualquier usuario
-    print("Media y desviación estándar del número de emails recibidos de phishing en los que ha interactuado cualquier usuario")
-    print("Media:", end="")
-    print(df_users['emails_phishing'].mean())
-    print("Desviación estandar", end="")
-    print(df_users['emails_phishing'].std())
+    # Media y desviación estándar del número de emails recibidos de phishing en los interactuo cualquier usuario
+    data["media_phishing"] = df_users['emails_phishing'].mean()
+    data["desviacion_phishing"] = df_users['emails_phishing'].std()
 
-    #Valor mínimo y valor máximo del total de emails recibidos
-    print("Valor mínimo y valor máximo del total de emails recibidos")
-    print("Máximo:",end="")
-    print(df_users['emails_totales'].max())
-    print("Mínimo:",end="")
-    print(df_users['emails_totales'].min())
+    # Valor mínimo y valor máximo del total de emails recibidos
+    data["max_email"] = df_users['emails_totales'].max()
+    data["min_email"] = df_users['emails_totales'].min()
 
-    #Valor mínimo y valor máximo del número de emails phishing en los que ha interactuado un administrador
-    print("Valor mínimo y valor máximo del número de emails phishing en los que ha interactuado un administrador")
-    print("Máximo:", end="")
-    print(df_admins['emails_clickados'].max())
-    print("Mínimo:", end="")
-    print(df_admins['emails_clickados'].min())
+    # Valor mínimo y valor máximo del número de emails phishing en los que ha interactuado un administrador
+    data["max_phishing_admin"] = df_admins['emails_clickados'].max()
+    data["min_phishing_admin"] = df_admins['emails_clickados'].min()
     con.close()
+    return data
 
 
 

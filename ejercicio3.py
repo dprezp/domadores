@@ -4,7 +4,7 @@ import hashlib as hash
 import pandas as pd
 
 
-def consultasUserTypeFilter():
+def consultas():
     # CONSULTAS EJ 3
     # conexion a la base de datos
     con = sqlite3.connect('datos.db')
@@ -18,79 +18,7 @@ def consultasUserTypeFilter():
     df_users = pd.read_sql_query(q_users, con)
     df_admin = pd.read_sql_query(q_admin, con)
 
-    # Numero de apariciones de Phishing en ambos grupos
-    print("El numero de apariciones de phishing en usuarios con permisos '0'")
-    print("Apariciones: ", end='')
-    print(df_users['emails_phishing'].sum())
-
-    print("El numero de apariciones de phishing de usuarios con permisos '1'")
-    print("Apariciones: ", end='')
-    print(df_admin['emails_phishing'].sum())
-
-    # Numero de valores ausentes de phishing en ambos grupos
-    print("El numero de valores ausentes de phishing en usuarios con permisos '0'")
-    print("Ausencias: ", end='')
-    print(df_users['emails_phishing'].isnull().sum())
-
-    print("El numero de valores ausentes de phishing de usuarios con permisos '1'")
-    print("Ausencias: ", end='')
-    print(df_admin['emails_phishing'].isnull().sum())
-
-    # Mediana de phishing encontrado en los usuarios de ambos grupos
-    print("La mediana de phishing en usuarios con permisos '0'")
-    print("Mediana: ", end='')
-    print(df_users['emails_phishing'].median())
-
-    print("La mediana de phishing de usuarios con permisos '1'")
-    print("Mediana: ", end='')
-    print(df_admin['emails_phishing'].median())
-
-    # Media de phishing encontrado en los usuarios de ambos grupos
-    print("La media de phishing en usuarios con permisos '0'")
-    print("Media: ", end='')
-    print(round(df_users['emails_phishing'].mean(), 2))
-
-    print("La media de phishing de usuarios con permisos '1'")
-    print("Media: ", end='')
-    print(round(df_admin['emails_phishing'].mean(), 2))
-
-    # Varianza de phishing encontrado en los usuarios de ambos grupos
-    print("La varianza de phishing en usuarios con permisos '0'")
-    print("Varianza: ", end='')
-    print(round(df_users['emails_phishing'].var(), 2))
-
-    print("La varianza de phishing de usuarios con permisos '1'")
-    print("Varianza: ", end='')
-    print(round(df_admin['emails_phishing'].var(), 2))
-
-    # Valor maximo de phishing encontrado en los usuarios de ambos grupos
-    print("Valor maximo de phishing en usuarios con permisos '0'")
-    print("Valor maximo: ", end='')
-    print(df_users['emails_phishing'].max())
-
-    print("Valor maximo de phishing de usuarios con permisos '1'")
-    print("Valor maximo: ", end='')
-    print(df_admin['emails_phishing'].max())
-
-    # Valor minimo de phishing encontrado en los usuarios de ambos grupos
-    print("Valor minimo de phishing en usuarios con permisos '0'")
-    print("Valor minimo: ", end='')
-    print(df_users['emails_phishing'].min())
-
-    print("Valor minimo de phishing de usuarios con permisos '1'")
-    print("Valor minimo: ", end='')
-    print(df_admin['emails_phishing'].min())
-
-    con.close()
-
-
-def consultasPassFilter():
-
-    # Concectamos a la base de datos
-    con = sqlite3.connect('datos.db')
-
     # Ahora, agrupamos por usuarios con contraseñas debiles y fuertes. Las consulatas son las mismas
-
 
     # Creamos las consultas
     q_users_debil = "SELECT * FROM usuarios WHERE segura=0"
@@ -100,53 +28,55 @@ def consultasPassFilter():
     df_users_fuerte = pd.read_sql_query(q_users_fuerte, con)
     df_users_debil = pd.read_sql_query(q_users_debil, con)
 
+    data = {}
+
     # Numero de apariciones de Phishing en ambos grupos
-    print("Valores tomados para usuarios con contraseñas fuertes")
+    data["phishing_users"] = df_users['emails_phishing'].sum()
+    data["phishing_admin"] = df_admin['emails_phishing'].sum()
 
-    print("Apariciones: ", end='')
-    print(df_users_fuerte['emails_phishing'].sum())
+    # Numero de valores ausentes de phishing en ambos grupos
+    data["ausencia_users"] = df_users['emails_phishing'].isnull().sum()
+    data["ausencia_admin"] = df_admin['emails_phishing'].isnull().sum()
 
-    print("Ausencias: ", end='')
-    print(df_users_fuerte['emails_phishing'].isnull().sum())
+    # Mediana de phishing encontrado en los usuarios de ambos grupos
+    data["mediana_users"] = df_users['emails_phishing'].median()
+    data["mediana_admin"] = df_admin['emails_phishing'].median()
 
-    print("Mediana: ", end='')
-    print(df_users_fuerte['emails_phishing'].median())
+    # Media de phishing encontrado en los usuarios de ambos grupos
+    data["media_users"] = round(df_users['emails_phishing'].mean(), 2)
+    data["media_admin"] = round(df_admin['emails_phishing'].mean(), 2)
 
-    print("Media: ", end='')
-    print(round(df_users_fuerte['emails_phishing'].mean(), 2))
+    # Varianza de phishing encontrado en los usuarios de ambos grupos
+    data["varianza_users"] = round(df_users['emails_phishing'].var(), 2)
+    data["varianza_admin"] = round(df_admin['emails_phishing'].var(), 2)
 
-    print("Varianza: ", end='')
-    print(round(df_users_fuerte['emails_phishing'].var(), 2))
+    # Valor maximo de phishing encontrado en los usuarios de ambos grupos
+    data["max_users"] = df_users['emails_phishing'].max()
+    data["max_admin"] = df_admin['emails_phishing'].max()
 
-    print("Valor maximo: ", end='')
-    print(df_users_fuerte['emails_phishing'].max())
+    # Valor minimo de phishing encontrado en los usuarios de ambos grupos
+    data["min_users"] = df_users['emails_phishing'].min()
+    data["min_admin"] = df_admin['emails_phishing'].min()
 
-    print("Valor minimo: ", end='')
-    print(df_users_fuerte['emails_phishing'].min())
+    # Usuarios con contraseña fuerte (replicacion de lo hecho anteriormente)
 
-    print("------------------------------------------------")
+    data["phishing_fuerte"] = df_users_fuerte['emails_phishing'].sum()
+    data["ausencia_fuerte"] = df_users_fuerte['emails_phishing'].isnull().sum()
+    data["mediana_fuerte"] = df_users_fuerte['emails_phishing'].median()
+    data["media_fuerte"] = round(df_users_fuerte['emails_phishing'].mean(), 2)
+    data["varianza_fuerte"] = round(df_users_fuerte['emails_phishing'].var(), 2)
+    data["max_fuerte"] = df_users_fuerte['emails_phishing'].max()
+    data["min_fuerte"] = df_users_fuerte['emails_phishing'].min()
 
-    print("Valores tomados para usuarios con contraseñas débiles")
+    # Usuarios con contraseña debil
 
-    print("Apariciones: ", end='')
-    print(df_users_debil['emails_phishing'].sum())
-
-    print("Ausencias: ", end='')
-    print(df_users_debil['emails_phishing'].isnull().sum())
-
-    print("Mediana: ", end='')
-    print(df_users_debil['emails_phishing'].median())
-
-    print("Media: ", end='')
-    print(round(df_users_debil['emails_phishing'].mean(), 2))
-
-    print("Varianza: ", end='')
-    print(round(df_users_debil['emails_phishing'].var(), 2))
-
-    print("Valor maximo: ", end='')
-    print(df_users_debil['emails_phishing'].max())
-
-    print("Valor minimo: ", end='')
-    print(df_users_debil['emails_phishing'].min())
+    data["phishing_debil"] = df_users_debil['emails_phishing'].sum()
+    data["ausencia_debil"] = df_users_debil['emails_phishing'].isnull().sum()
+    data["mediana_debil"] = df_users_debil['emails_phishing'].median()
+    data["media_debil"] = round(df_users_debil['emails_phishing'].mean(), 2)
+    data["varianza_debil"] = round(df_users_debil['emails_phishing'].var(), 2)
+    data["max_debil"] = df_users_debil['emails_phishing'].max()
+    data["min_debil"] = df_users_debil['emails_phishing'].min()
 
     con.close()
+    return data

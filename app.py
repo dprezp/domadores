@@ -1,23 +1,36 @@
-# from flask import Flask
-import os
+from flask import Flask, render_template
+import ejercicio3
 import tablas
 # import ejercicio4
-import ejercicio3
 
-if os.path.exists('datos.db'):
-    os.remove('datos.db')
 
-tablas.crearLegal()
-tablas.crearUsers()
+app = Flask(__name__)
 
-# ejercicio4.ej4_1()
-# ejercicio4.ej4_2()
-# ejercicio4.ej4_3()
-# ejercicio4.ej4_4()
-# tablas.consultas2()
-# tablas.consultas3()
-# ejercicio3.consultasUserTypeFilter()
-#ejercicio3.consultasPassFilter()
+tablas.init()
+
+
+@app.route('/')
+def basic():  # pagina de inicio
+    return render_template('home.html')
+
+
+@app.route('/ejercicio2')
+def ej2():
+    data2 = tablas.consultas2()
+    return render_template('ejercicio2.html', **data2)
+
+
+@app.route('/ejercicio3')
+def ej3():
+    data3 = ejercicio3.consultas()
+    print(data3)
+    return render_template('ejercicio3.html', **data3)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
 
 
 
