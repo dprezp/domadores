@@ -35,20 +35,18 @@ def crearLegal():
 # Para saber si el usuario tiene una contraseña segura o no
 # (que aparezca enla lista de contraseñas comunes)
 def esSegura(contrasena, hash):
-    for hashes in hash:
-        if contrasena == hashes:
-            return False
-    return True
+    return contrasena in hash
 
 
-# Hashea las contraseñas más comunes
-def hashear():
-    hashes = []
-    comunes = open('data/comunes.txt', 'r')
-    for comun in comunes:
-        hashComun = hash.md5(comun[:-1].encode(encoding="utf-8")).hexdigest()
-        # Todo menos el ultimo caracter para evitar el salto de linea
-        hashes.append(hashComun)
+# Hashea las contraseñas más comunes en el diccionario SmallRockyou
+def hashComunes():
+    hashes = set()  # Meteremos los hash en un set, dado que comprobar si un hash pertenece al conjunto
+    # Implica una complejidad O(1)
+    with open('data/Smallrockyou.txt', 'r') as comunes:
+        for comun in comunes:
+            hashComun = hash.md5(comun[:-1].encode(encoding="utf-8")).hexdigest()
+            # Evitamos incluir el salto de línea, porque el resultado del hash sería erróneo
+            hashes.add(hashComun)
     return hashes
 
 
@@ -79,14 +77,14 @@ def crearUsers():
                     ");")
         con.commit()
 
-        hashesInseguros = hashear()
+        hashesInseguros = hashComunes()
 
         for elem in datos["usuarios"]:
             clave = list(elem.keys())[0]
 
             # Para saber si el usuario tiene una contraseña segura o no
             seguridad = 0
-            if esSegura(elem[clave]['contrasena'], hashesInseguros):
+            if elem[clave]['contrasena'] not in hashesInseguros:
                 seguridad = 1
 
             cur.execute(
@@ -167,79 +165,5 @@ def consultas2():
     print(df_admins['emails_clickados'].min())
     con.close()
 
-def consultas3():
-    # CONSULTAS EJ 3
-    # conexion a la base de datos
-    con = sqlite3.connect('datos.db')
 
-    # Hacemos las consultas para sacar los dataFrames
-    #separamos por grupos en funcion de los permisos
-    q_users = "SELECT * FROM usuarios WHERE permisos = '0'"
-    q_admin = "SELECT * FROM usuarios WHERE permisos = '1'"
 
-    #sacamos los dataFrames
-    df_users = pd.read_sql_query(q_users, con)
-    df_admin = pd.read_sql_query(q_admin, con)
-
-    # Numero de apariciones de Phishing en ambos grupos
-    print("El numero de apariciones de phishing en usuarios con permisos '0'")
-    print("Apariciones: ", end='')
-    print(df_users['emails_phishing'].sum())
-
-    print("El numero de apariciones de phishing de usuarios con permisos '1'")
-    print("Apariciones: ", end='')
-    print(df_admin['emails_phishing'].sum())
-
-    # Numero de valores ausentes de phishing en ambos grupos
-    print("El numero de valores ausentes de phishing en usuarios con permisos '0'")
-    print("Ausencias: ", end='')
-    print(df_users['emails_phishing'].isnull().sum())
-
-    print("El numero de valores ausentes de phishing de usuarios con permisos '1'")
-    print("Ausencias: ", end='')
-    print(df_admin['emails_phishing'].isnull().sum())
-
-    # Mediana de phishing encontrado en los usuarios de ambos grupos
-    print("La mediana de phishing en usuarios con permisos '0'")
-    print("Mediana: ", end='')
-    print(df_users['emails_phishing'].median())
-
-    print("La mediana de phishing de usuarios con permisos '1'")
-    print("Mediana: ", end='')
-    print(df_admin['emails_phishing'].median())
-
-    # Media de phishing encontrado en los usuarios de ambos grupos
-    print("La media de phishing en usuarios con permisos '0'")
-    print("Media: ", end='')
-    print(round(df_users['emails_phishing'].mean(), 2))
-
-    print("La media de phishing de usuarios con permisos '1'")
-    print("Media: ", end='')
-    print(round(df_admin['emails_phishing'].mean(), 2))
-
-    # Varianza de phishing encontrado en los usuarios de ambos grupos
-    print("La varianza de phishing en usuarios con permisos '0'")
-    print("Varianza: ", end='')
-    print(round(df_users['emails_phishing'].var(), 2))
-
-    print("La varianza de phishing de usuarios con permisos '1'")
-    print("Varianza: ", end='')
-    print(round(df_admin['emails_phishing'].var(), 2))
-
-    # Valor maximo de phishing encontrado en los usuarios de ambos grupos
-    print("Valor maximo de phishing en usuarios con permisos '0'")
-    print("Valor maximo: ", end='')
-    print(df_users['emails_phishing'].max())
-
-    print("Valor maximo de phishing de usuarios con permisos '1'")
-    print("Valor maximo: ", end='')
-    print(df_admin['emails_phishing'].max())
-
-    # Valor minimo de phishing encontrado en los usuarios de ambos grupos
-    print("Valor minimo de phishing en usuarios con permisos '0'")
-    print("Valor minimo: ", end='')
-    print(df_users['emails_phishing'].min())
-
-    print("Valor minimo de phishing de usuarios con permisos '1'")
-    print("Valor minimo: ", end='')
-    print(df_admin['emails_phishing'].min())
