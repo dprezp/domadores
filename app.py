@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import ejercicio3
 import ejercicio4
 import tablas
@@ -43,9 +43,16 @@ def ej4_1():
     return render_template('4parte1.html', **data4_1)
 
 
-@app.route('/parte2')
+@app.route('/parte2', methods=['GET', 'POST'])
 def ej4_2():
-    data4_2 = ejercicio4.ej4_2()
+
+    if request.method == 'POST':
+        usuarios = int(request.form['num_usuarios'])
+        if usuarios <= 0:
+            data4_2 = {'df_inseguro': None}
+        data4_2 = ejercicio4.ej4_2(usuarios)
+    else:
+        data4_2 = {'df_inseguro': None}
     return render_template('4parte2.html', **data4_2)
 
 

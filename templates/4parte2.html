@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>Resultados Ejercicio 4.2</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,36 +40,48 @@
 <body>
     <h1>Usuarios más críticos</h1>
 
-    <div class="chart">
-        <img src="data:image/png;base64,{{ data_uri }}" alt="Gráfico de usuarios críticos">
-    </div>
-
-    <h2>Datos de usuarios más críticos</h2>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Emails Clickados</th>
-                    <th>Emails Phishing</th>
-                    <th>Probabilidad (%)</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for index, row in df_inseguro.iterrows() %}
-                <tr>
-                    <td>{{ row['id'] }}</td>
-                    <td>{{ row['emails_clickados'] }}</td>
-                    <td>{{ row['emails_phishing'] }}</td>
-                    <td>{{ row['probabilidad'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="btn-container text-center">
-                <a href="/ejercicio4" class="btn btn-primary">Volver a pagina de ejercicio 4</a>
-                <a href="/" class="btn btn-primary">Volver a pagina principal</a>
+    <!-- Formulario para recoger el número de usuarios -->
+    <form action="/parte2" method="post" class="form-inline justify-content-center">
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="num_usuarios" class="sr-only">Número de Usuarios:</label>
+            <input type="number" class="form-control" id="num_usuarios" name="num_usuarios" placeholder="Número de Usuarios">
         </div>
-    </div>
+        <button type="submit" class="btn btn-primary mb-2">Mostrar</button>
+    </form>
+
+    <!-- Verificar si df_inseguro tiene datos antes de intentar iterar sobre él -->
+    {% if df_inseguro is not none %}
+        <div class="chart">
+            <img src="data:image/png;base64,{{ data_uri }}" alt="Gráfico de usuarios críticos">
+        </div>
+
+        <h2>Datos de usuarios más críticos</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Emails Clickados</th>
+                        <th>Emails Phishing</th>
+                        <th>Probabilidad (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in df_inseguro.iterrows() %}
+                    <tr>
+                        <td>{{ row['id'] }}</td>
+                        <td>{{ row['emails_clickados'] }}</td>
+                        <td>{{ row['emails_phishing'] }}</td>
+                        <td>{{ row['probabilidad'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="btn-container text-center">
+                    <a href="/parte2" class="btn btn-primary">Volver a página de ejercicio 4</a>
+                    <a href="/" class="btn btn-primary">Volver a página principal</a>
+            </div>
+        </div>
+    {% endif %}
 </body>
 </html>
