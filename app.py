@@ -50,7 +50,8 @@ def ej4_2():
         usuarios = int(request.form['num_usuarios'])
         if usuarios <= 0:
             data4_2 = {'df_inseguro': None}
-        data4_2 = ejercicio4.ej4_2(usuarios)
+        else:
+            data4_2 = ejercicio4.ej4_2(usuarios)
     else:
         data4_2 = {'df_inseguro': None}
     return render_template('4parte2.html', **data4_2)

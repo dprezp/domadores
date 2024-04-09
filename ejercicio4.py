@@ -85,6 +85,9 @@ def ej4_2(numUsers):
 
     df_inseguro = pd.read_sql_query(q_inseguro, con)
 
+    maxUsers = len(df_inseguro)
+    if maxUsers < numUsers:
+        return {'df_inseguro': None}
 
     # Calcular probabilidad de éxito para ataques de phishing
     df_inseguro['probabilidad'] = df_inseguro['emails_clickados'] / df_inseguro['emails_phishing'] * 100
