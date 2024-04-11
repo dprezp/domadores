@@ -47,14 +47,22 @@ def ej4_1():
 def ej4_2():
 
     if request.method == 'POST':
-        usuarios = int(request.form['num_usuarios'])
-        if usuarios <= 0:
-            data4_2 = {'df_inseguro': None}
+        if 'btn_mas50' in request.form:
+            # Mostrar usuarios que han hecho click más del 50% de las veces
+            data4_2 = ejercicio4.ej4_2_mas50()
+        elif 'btn_menos50' in request.form:
+            # Mostrar usuarios que han hecho click menos del 50% de las veces
+            data4_2 = ejercicio4.ej4_2_menos50()
         else:
-            data4_2 = ejercicio4.ej4_2(usuarios)
+            usuarios = int(request.form['num_usuarios'])
+            if usuarios <= 0:
+                data4_2 = {'df_inseguro': None}
+            else:
+                data4_2 = ejercicio4.ej4_2(usuarios)
     else:
         data4_2 = {'df_inseguro': None}
     return render_template('4parte2.html', **data4_2)
+
 
 
 @app.route('/parte3')
