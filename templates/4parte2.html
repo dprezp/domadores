@@ -46,11 +46,18 @@
             <label for="num_usuarios" class="sr-only">Número de Usuarios:</label>
             <input type="number" class="form-control" id="num_usuarios" name="num_usuarios" placeholder="Número de Usuarios">
         </div>
+        <div class="radio-buttons">
+            <label class="radio-btn-container"> Más de 50%
+                <input type="radio" name="clicks_filter" value="mas50" checked>
+                <span class="checkmark"></span>
+            </label>
+            <label class="radio-btn-container"> Menos de 50%
+                <input type="radio" name="clicks_filter" value="menos50">
+                <span class="checkmark"></span>
+            </label>
+        </div>
         <button type="submit" class="btn btn-primary mb-2">Mostrar</button>
-        <button type="submit" class="btn btn-danger mb-2" name="btn_mas50">Más de 50%</button>
-        <button type="submit" class="btn btn-success mb-2" name="btn_menos50">Menos de 50%</button>
     </form>
-
 
     <!-- Verificar si df_inseguro tiene datos antes de intentar iterar sobre él -->
     {% if df_inseguro is not none %}

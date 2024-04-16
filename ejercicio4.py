@@ -75,7 +75,7 @@ def ej4_1():
     return data
 
 
-def ej4_2(numUsers):
+def ej4_2(numUsers, mas):
     con = sqlite3.connect('datos.db')
 
     q_inseguro = ("SELECT id, emails_clickados, emails_phishing  "
@@ -93,8 +93,16 @@ def ej4_2(numUsers):
     df_inseguro['probabilidad'] = df_inseguro['emails_clickados'] / df_inseguro['emails_phishing'] * 100
     df_inseguro.sort_values(by='probabilidad', ascending=False, inplace=True)
 
-    # Seleccionar los primeros 10 usuarios con más probabilidad
+    # Seleccionar los primeros X usuarios con más probabilidad
     df_inseguro = df_inseguro.head(numUsers)
+
+    if mas is not None:
+        if mas == '+':
+            # Seleccionar los usuarios con más de 50% de probabilidad
+            df_mas50 = df_inseguro[df_inseguro['probabilidad'] >= 50]
+        if mas == '-':
+            # Seleccionar los usuarios con menos de 50% de probabilidad
+            df_mas50 = df_inseguro[df_inseguro['probabilidad'] < 50]
 
     # Generar el gráfico y convertirlo a base64
     plt.figure(figsize=(12, 6))
@@ -114,79 +122,6 @@ def ej4_2(numUsers):
 
     # Creamos un diccionario para poder enviarle a Flask los datos, con las mismas claves que las usadas en el html
     return {"data_uri": data_uri, "df_inseguro": df_inseguro}
-
-def ej4_2_mas50():
-    con = sqlite3.connect('datos.db')
-
-    q_inseguro = ("SELECT id, emails_clickados, emails_phishing  "
-                  "FROM usuarios WHERE segura IS 0 AND emails_clickados IS NOT 0 "
-                  "AND emails_phishing IS NOT 0 ;")
-
-    df_inseguro = pd.read_sql_query(q_inseguro, con)
-
-    # Calcular probabilidad de éxito para ataques de phishing
-    df_inseguro['probabilidad'] = df_inseguro['emails_clickados'] / df_inseguro['emails_phishing'] * 100
-    df_inseguro.sort_values(by='probabilidad', ascending=False, inplace=True)
-
-    # Seleccionar los usuarios con más de 50% de probabilidad
-    df_mas50 = df_inseguro[df_inseguro['probabilidad'] > 50]
-
-    plt.figure(figsize=(12, 6))
-    plt.bar(df_mas50['id'], df_mas50['probabilidad'], color='red')
-    plt.title("Usuarios críticos con más del 50% de clicks")
-    plt.xlabel("Usuario")
-    plt.ylabel("Probabilidad de clickar un correo spam (%)")
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-
-    # Convertir el gráfico a base64
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    data_uri = base64.b64encode(buf.read()).decode('utf-8')
-    plt.close()
-
-    con.close()
-
-    return {"data_uri": data_uri, "df_inseguro": df_mas50}
-
-
-def ej4_2_menos50():
-    con = sqlite3.connect('datos.db')
-
-    q_inseguro = ("SELECT id, emails_clickados, emails_phishing  "
-                  "FROM usuarios WHERE segura IS 0 AND emails_clickados IS NOT 0 "
-                  "AND emails_phishing IS NOT 0 ;")
-
-    df_inseguro = pd.read_sql_query(q_inseguro, con)
-
-    # Calcular probabilidad de éxito para ataques de phishing
-    df_inseguro['probabilidad'] = df_inseguro['emails_clickados'] / df_inseguro['emails_phishing'] * 100
-    df_inseguro.sort_values(by='probabilidad', ascending=False, inplace=True)
-
-    # Seleccionar los usuarios con menos de 50% de probabilidad
-    df_menos50 = df_inseguro[df_inseguro['probabilidad'] <= 50]
-
-    # Generar el gráfico
-    plt.figure(figsize=(12, 6))
-    plt.bar(df_menos50['id'], df_menos50['probabilidad'], color='green')
-    plt.title("Usuarios críticos con menos del 50% de clicks")
-    plt.xlabel("Usuario")
-    plt.ylabel("Probabilidad de clickar un correo spam (%)")
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-
-    # Convertir el gráfico a base64
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    data_uri = base64.b64encode(buf.read()).decode('utf-8')
-    plt.close()
-
-    con.close()
-
-    return {"data_uri": data_uri, "df_inseguro": df_menos50}
-
 
 def ej4_3():
     # Conectar con la base de datos
