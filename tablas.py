@@ -66,7 +66,8 @@ def crearUsers():
                     "permisos TEXT,"
                     "emails_totales INTEGER,"
                     "emails_phishing INTEGER,"
-                    "emails_clickados INTEGER"
+                    "emails_clickados INTEGER,"
+                    "user_role TEXT"
                     ");")
         con.commit()
 
@@ -89,12 +90,14 @@ def crearUsers():
             if elem[clave]['contrasena'] not in hashesInseguros: # Si no esta en el set de hashes inseguros, es segura
                 seguridad = 1
 
+            rol = "admin" if clave == "ceo" else "user"
+
             cur.execute(
-                "INSERT OR IGNORE INTO usuarios (id, telefono, contrasena, segura, provincia, permisos, emails_totales, emails_phishing, emails_clickados)" \
-                "VALUES ('%s','%s','%s', '%d','%s','%s', '%d', '%d', '%d')" %
+                "INSERT OR IGNORE INTO usuarios (id, telefono, contrasena, segura, provincia, permisos, emails_totales, emails_phishing, emails_clickados, user_role)" \
+                "VALUES ('%s','%s','%s', '%d','%s','%s', '%d', '%d', '%d', '%s')" %
                 (clave, elem[clave]['telefono'], elem[clave]['contrasena'], seguridad,
                  elem[clave]['provincia'], elem[clave]['permisos'], int(elem[clave]['emails']['total']),
-                 int(elem[clave]['emails']['phishing']), int(elem[clave]['emails']['cliclados'])))
+                 int(elem[clave]['emails']['phishing']), int(elem[clave]['emails']['cliclados']), rol))
             con.commit()
             i = 0
             fechas = elem[clave]["fechas"]
