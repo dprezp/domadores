@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request
 import ejercicio3
 import ejercicio4
+import parte2Ejercicio3
 import tablas
-
 
 app = Flask(__name__)
 
 tablas.init()
+
 
 # Fundamental: pasamos el valor clave-valor de los mapas con **map
 # Esto es gracias a que hemos puesto el mismo nombre para los valores en el html que los nombres de las claves del mapa.
@@ -45,7 +46,6 @@ def ej4_1():
 
 @app.route('/parte2', methods=['GET', 'POST'])
 def ej4_2():
-
     if request.method == 'POST':
         usuarios = request.form['num_usuarios']
         if not usuarios:
@@ -68,8 +68,6 @@ def ej4_2():
     return render_template('4parte2.html', **data4_2)
 
 
-
-
 @app.route('/parte3')
 def ej4_3():
     data4_3 = ejercicio4.ej4_3()
@@ -80,6 +78,13 @@ def ej4_3():
 def ej4_4():
     data4_4 = ejercicio4.ej4_4()
     return render_template('4parte4.html', **data4_4)
+
+
+@app.route('/Ej3parte2')
+def ej3_2():
+    data3_2 = parte2Ejercicio3.parte2Ej3()
+    return render_template('3parte2.html', **data3_2)
+
 
 @app.route('/parte1-2', methods=["GET", "POST"])
 def ej1_2():
@@ -97,10 +102,3 @@ def ej1_2():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
-
-
