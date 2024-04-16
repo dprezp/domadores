@@ -81,6 +81,19 @@ def ej4_4():
     data4_4 = ejercicio4.ej4_4()
     return render_template('4parte4.html', **data4_4)
 
+@app.route('/parte1-2', methods=["GET", "POST"])
+def ej1_2():
+    if request.method == 'POST':
+        webs = int(request.form['num_webs'])
+        if webs <= 0:
+            data1_2 = {'html_data': None}
+        else:
+            data1_2 = ejercicio4.part2_ej1_2(webs)
+    else:
+        data1_2 = {'html_data': None}
+
+    return render_template('parte2ejercicio1-2.html', **data1_2)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

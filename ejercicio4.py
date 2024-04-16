@@ -196,6 +196,48 @@ def ej4_4():
     con.close()
     return {"data_uri": data_uri}  # devolvemos un diccionario que contiene el grafico en base64 (mostrado en el html)
 
+def part2_ej1_2(num_pages):
+    # Conectar con la base de datos
+    con = sqlite3.connect('datos.db')
+
+    # Realizar la consulta y obtener el dataframe
+    q_webs = 'SELECT id, cookies, aviso, proteccion_de_datos, creacion FROM legal;'
+    df_webs = pd.read_sql_query(q_webs, con)
+
+    maxWebs = len(df_webs)
+
+    if maxWebs < num_pages:
+        return {'html_data': None}
+
+    # Calcular la cantidad de políticas deprecated
+    df_webs['deprecated'] = df_webs[['cookies', 'aviso', 'proteccion_de_datos']].apply(lambda row: sum(row == 0),
+                                                                                       axis=1)
+
+    # Ordenar las webs según deprecated y seleccionar las primeras cinco
+    df_webs.sort_values(by=['deprecated', 'creacion'], inplace=True, ascending=[False, True])
+    pages = df_webs.head(num_pages)
+
+    # Crear una representación HTML de los datos
+    html_data = pages.to_html()
+
+    # Generar el gráfico y convertirlo a base64
+    plt.figure(figsize=(12, 6))
+    pages.set_index('id').plot(kind='bar')
+    plt.title('Políticas desactualizadas')
+    plt.xlabel('Página web')
+    plt.ylabel('Estado')
+    plt.legend()
+    plt.tight_layout()
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    data_uri = base64.b64encode(buf.read()).decode('utf-8')
+    plt.close()
+
+    # Cerrar la conexión con la base de datos
+    con.close()
+    # Devolvemos un diccionario con la informacion que se mostrará en la pagina estatica
+    return {"html_data": html_data, "data_uri": data_uri}
 
 
 
