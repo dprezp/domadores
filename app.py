@@ -79,6 +79,8 @@ def ej4_2():
                         data4_2 = ejercicio4.ej4_2(usuarios, '-')
                     else:
                         data4_2 = ejercicio4.ej4_2(usuarios, None)
+                else:
+                    data4_2 = ejercicio4.ej4_2(usuarios, None)
     else:
         data4_2 = {'df_inseguro': None}
     return render_template('4parte2.html', **data4_2)

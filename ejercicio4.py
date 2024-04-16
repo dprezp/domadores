@@ -99,10 +99,10 @@ def ej4_2(numUsers, mas):
     if mas is not None:
         if mas == '+':
             # Seleccionar los usuarios con más de 50% de probabilidad
-            df_mas50 = df_inseguro[df_inseguro['probabilidad'] >= 50]
+            df_inseguro = df_inseguro[df_inseguro['probabilidad'] >= 50]
         if mas == '-':
             # Seleccionar los usuarios con menos de 50% de probabilidad
-            df_mas50 = df_inseguro[df_inseguro['probabilidad'] < 50]
+            df_inseguro = df_inseguro[df_inseguro['probabilidad'] < 50]
 
     # Generar el gráfico y convertirlo a base64
     plt.figure(figsize=(12, 6))
