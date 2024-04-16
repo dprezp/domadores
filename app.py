@@ -3,6 +3,7 @@ import ejercicio3
 import ejercicio4
 import parte2Ejercicio3
 import tablas
+from ej4_API import ej4API
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import User
 import secrets
@@ -105,6 +106,14 @@ def ej4_4():
 def ej3_2():
     data3_2 = parte2Ejercicio3.parte2Ej3()
     return render_template('3parte2.html', **data3_2)
+
+
+@app.route('/Ej4API')
+@login_required
+def ej4_API():
+    data4API = ej4API()
+    return render_template('otherAPI.html', **data4API)
+
 
 
 @app.route('/parte1-2', methods=["GET", "POST"])

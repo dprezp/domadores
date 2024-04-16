@@ -75,7 +75,7 @@ def ej4_1():
     return data
 
 
-def ej4_2(numUsers, mas):
+def ej4_2(numUsers, filtro):
     con = sqlite3.connect('datos.db')
 
     q_inseguro = ("SELECT id, emails_clickados, emails_phishing  "
@@ -95,14 +95,14 @@ def ej4_2(numUsers, mas):
 
     # Seleccionar los primeros X usuarios con más probabilidad
     df_inseguro = df_inseguro.head(numUsers)
-
-    if mas is not None:
-        if mas == '+':
+    if filtro is not None:
+        if filtro == '+':
             # Seleccionar los usuarios con más de 50% de probabilidad
             df_inseguro = df_inseguro[df_inseguro['probabilidad'] >= 50]
-        if mas == '-':
+        if filtro == '-':
             # Seleccionar los usuarios con menos de 50% de probabilidad
             df_inseguro = df_inseguro[df_inseguro['probabilidad'] < 50]
+
 
     # Generar el gráfico y convertirlo a base64
     plt.figure(figsize=(12, 6))
