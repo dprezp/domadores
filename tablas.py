@@ -53,7 +53,7 @@ def hashComunes():
 
 
 def crearUsers():
-    with open('data/users_data_online.json', 'r') as f:
+    with open('data/users_data_online_clasificado.json', 'r') as f:
         datos = json.load(f)
         con = sqlite3.connect('datos.db')
         cur = con.cursor()
@@ -62,6 +62,7 @@ def crearUsers():
                     "telefono INTEGER,"
                     "contrasena TEXT,"
                     "segura INTEGER,"
+                    "critico INTEGER,"
                     "provincia TEXT,"
                     "permisos TEXT,"
                     "emails_totales INTEGER,"
@@ -93,11 +94,11 @@ def crearUsers():
             rol = "admin" if clave == "ceo" else "user"
 
             cur.execute(
-                "INSERT OR IGNORE INTO usuarios (id, telefono, contrasena, segura, provincia, permisos, emails_totales, emails_phishing, emails_clickados, user_role)" \
-                "VALUES ('%s','%s','%s', '%d','%s','%s', '%d', '%d', '%d', '%s')" %
+                "INSERT OR IGNORE INTO usuarios (id, telefono, contrasena, segura, provincia, permisos, emails_totales, emails_phishing, emails_clickados, user_role,critico)" \
+                "VALUES ('%s','%s','%s', '%d','%s','%s', '%d', '%d', '%d', '%s', '%d')" %
                 (clave, elem[clave]['telefono'], elem[clave]['contrasena'], seguridad,
                  elem[clave]['provincia'], elem[clave]['permisos'], int(elem[clave]['emails']['total']),
-                 int(elem[clave]['emails']['phishing']), int(elem[clave]['emails']['cliclados']), rol))
+                 int(elem[clave]['emails']['phishing']), int(elem[clave]['emails']['cliclados']), rol, elem[clave]['critico']))
             con.commit()
             i = 0
             fechas = elem[clave]["fechas"]
