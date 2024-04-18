@@ -5,7 +5,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
-import json
 
 conn = sqlite3.connect('datos.db')
 
@@ -22,8 +21,18 @@ df_BD['permisos_seguros'] = (df_BD['permisos'] ==1) & (df_BD['segura'] ==0)
 x = df_BD[['tasa_phishing','tasa_clicados','permisos_seguros']]
 y = df_BD['critico']
 
+
 # Dividir los datos en conjuntos de entrenamiento y prueba
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+# Eliminar filas con NaN en x_train y y_train
+x_train = x_train.dropna()
+y_train = y_train[x_train.index]
+
+# Dividir los datos en conjuntos de entrenamiento y prueba
+x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
+
+
 
 #entrenamos modelos
 #Regresión logistica
