@@ -20,35 +20,15 @@ def ej5():
 
     df_BD['tasa_phishing'] = np.where(df_BD['emails_totales'] != 0, df_BD['emails_phishing'] / df_BD['emails_totales'],
                                   0)
-    df_BD['tasa_clicados'] = np.where(df_BD['emails_phishing'] != 0,
-                                  df_BD['emails_clickados'] / df_BD['emails_phishing'], 0)
+    df_BD['tasa_clicados'] = np.where(df_BD['emails_phishing'] != 0,df_BD['emails_clickados'] / df_BD['emails_phishing'], 0)
     df_BD['permisos_seguros'] = (df_BD['permisos'] == 1) & (df_BD['segura'] == 0)
 
-<<<<<<< Updated upstream
-
-# Dividir los datos en conjuntos de entrenamiento y prueba
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-
-# Eliminar filas con NaN en x_train y y_train
-x_train = x_train.dropna()
-y_train = y_train[x_train.index]
-
-# Dividir los datos en conjuntos de entrenamiento y prueba
-x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
-
-
-
-#entrenamos modelos
-#Regresión logistica
-logistic_model = LogisticRegression()
-logistic_model.fit(x_train, y_train)
-=======
     x = df_BD[['tasa_phishing', 'tasa_clicados', 'permisos_seguros']]
     y = df_BD['critico']
 
     # Dividir los datos en conjuntos de entrenamiento y prueba
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
->>>>>>> Stashed changes
+
 
     # Eliminar filas con NaN en x_train y y_train
     x_train = x_train.dropna()
