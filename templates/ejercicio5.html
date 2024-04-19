@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    .containerCent{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .text-center{
+        text-align: center;
+        margin-bottom: -100px;
+    }
+</style>
+<title>Formulario de Usuario CMI</title>
+</head>
+<body>
+
+<h2 class="text-center">Formulario de Usuario CMI</h2>
+<div class="containerCent">
+    <form action="/procesado" method="post">
+        <label for="nombre">Nombre:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br>
+
+        <label for="telefono">Teléfono:</label><br>
+        <input type="text" id="telefono" name="telefono" required><br>
+
+        <label for="provincia">Provincia:</label><br>
+        <input type="text" id="provincia" name="provincia" required><br>
+
+        <label for="permisos">Permisos:</label><br>
+        <input type="text" id="permisos" name="permisos" required><br>
+
+        <label for="total_enviados">Total de Emails Enviados:</label><br>
+        <input type="number" id="total_enviados" name="total_enviados" required><br>
+
+        <label for="total_phishing">Total de Emails con Phishing:</label><br>
+        <input type="number" id="total_phishing" name="total_phishing" required><br>
+
+        <label for="total_clicados">Total de Emails Clicados:</label><br>
+        <input type="number" id="total_clicados" name="total_clicados" required><br>
+
+        <label for="passSegura">Contraseña segura?:</label><br>
+        <input type="number" id="passSegura" name="passSegura" min="0" max="1" step="1" required><br>
+
+        <label for="metodo">Método de Inteligencia Artificial:</label><br>
+        <select id="metodo" name="metodo" required>
+            <option value="decisionTree">Decision Tree</option>
+            <option value="randomForest">Random Forest</option>
+            <option value="regresionLineal">Regresión Lineal</option>
+        </select><br><br>
+
+        <input type="submit" value="Enviar">
+    </form>
+</div>
+</body>
+</html>
