@@ -193,7 +193,7 @@ def login():
         password = request.form['password']
         user = User.get(username)
         # jose.suarez --> password
-        if user and user.check_password(password):
+        if user and len(password) < 20 and user.check_password(password):
             login_user(user)
             return redirect("/")
         else:
@@ -206,11 +206,12 @@ def login():
 def admin_dashboard():
     if not current_user.is_authenticated or not current_user.is_admin():
         abort(403)  # Prohibido
-    # Si el usuario es administrador, muestra el dashboard del admin
+    # Si el usuario es administrador, muestra la pagina del admin
     return render_template('admin.html')
 
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect("/login")
