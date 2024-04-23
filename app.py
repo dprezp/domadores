@@ -1,12 +1,16 @@
+import numpy as np
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 import ejercicio3
 import ejercicio4
 import parte2Ejercicio3
+import parte2Ejercicio5
 import tablas
 from ej4_API import ej4API
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import User
 import secrets
+
+from parte2Ejercicio5 import ej5
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -115,7 +119,6 @@ def ej4_API():
     return render_template('otherAPI.html', **data4API)
 
 
-
 @app.route('/parte1-2', methods=["GET", "POST"])
 @login_required
 def ej1_2():
@@ -131,6 +134,55 @@ def ej1_2():
     return render_template('parte2ejercicio1-2.html', **data1_2)
 
 
+@app.route('/ejercicio5', methods=["GET", "POST"])
+@login_required
+def ej5_modelos():
+    data5 = ej5()
+    return render_template('ejercicio5.html', **data5)
+
+
+@app.route('/procesado', methods=['GET', 'POST'])
+@login_required
+def procesar_datos():
+    data5 = ej5()
+    nombre = request.form['nombre']
+    telefono = int(request.form['telefono'])
+    provincia = request.form['provincia']
+    permisos = int(request.form['permisos'])
+    total_enviados = int(request.form['total_enviados'])
+    total_phishing = int(request.form['total_phishing'])
+    total_clicados = int(request.form['total_clicados'])
+    segura = int(request.form['passSegura'])
+    metodo = request.form['metodo']
+
+    tasaPhishing = total_phishing / total_enviados
+    tasaClick = total_clicados / total_phishing
+    relPerSeg = (permisos == 1) & (segura == 0)
+
+    test = [tasaPhishing, tasaClick, relPerSeg]
+    test2D = np.asarray([test])
+
+    prediction = None
+
+    if metodo == 'regresionLineal':
+        variable = data5['regresionLineal']
+        prediction = variable.predict(test2D)
+    elif metodo == 'randomForest':
+        variable = data5['randomForest']
+        prediction = variable.predict(test2D)
+
+    elif metodo == 'decisionTree':
+        variable = data5['decisionTree']
+        prediction = variable.predict(test2D)
+
+    if prediction == 1:
+        prediction = "crítico"
+    else:
+        prediction = "no crítico"
+
+    return render_template('procesadoExitoso.html', prediction=prediction)
+
+
 ###### LOGIN
 
 
@@ -141,27 +193,28 @@ def login():
         password = request.form['password']
         user = User.get(username)
         # jose.suarez --> password
-        if user and user.check_password(password):
+        if user and len(password) < 20 and user.check_password(password):
             login_user(user)
             return redirect("/")
         else:
             flash('Usuario o contraseña incorrectos', 'error')
     return render_template('login.html')
 
+
 @app.route('/admin')
 @login_required
 def admin_dashboard():
     if not current_user.is_authenticated or not current_user.is_admin():
         abort(403)  # Prohibido
-    # Si el usuario es administrador, muestra el dashboard del admin
+    # Si el usuario es administrador, muestra la pagina del admin
     return render_template('admin.html')
 
+
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect("/login")
-
-
 
 
 if __name__ == '__main__':

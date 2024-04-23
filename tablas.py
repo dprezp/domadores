@@ -91,7 +91,8 @@ def crearUsers():
             if elem[clave]['contrasena'] not in hashesInseguros: # Si no esta en el set de hashes inseguros, es segura
                 seguridad = 1
 
-            rol = "admin" if clave == "ceo" else "user"
+            rol = "medium" if elem[clave]['permisos'] == "1" else "user"
+            rol = "admin" if (clave == "ceo" or clave == "administrador") else rol
 
             cur.execute(
                 "INSERT OR IGNORE INTO usuarios (id, telefono, contrasena, segura, provincia, permisos, emails_totales, emails_phishing, emails_clickados, user_role,critico)" \
