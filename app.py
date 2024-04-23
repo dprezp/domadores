@@ -60,7 +60,7 @@ def ej4_1():
     return render_template('4parte1.html', **data4_1)
 
 
-@app.route('/parte2', methods=['GET', 'POST'])
+@app.route('/Ej1parte2', methods=['GET', 'POST'])
 @login_required
 def ej4_2():
     if request.method == 'POST':
