@@ -71,7 +71,7 @@
         </div>
         <div class="enlaces">
             <h2>Parte 2</h2>
-            {% if current_user.is_authenticated and current_user.role == 'admin' %}
+            {% if current_user.is_authenticated and current_user.isAdmin() %}
             <a href="/admin" class="enlace">Modo Admin</a>
             {% endif %}
             <a href="/parte1-2" class="enlace">Ejercicio 1.2</a>
