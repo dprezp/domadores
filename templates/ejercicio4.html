@@ -38,6 +38,24 @@
         .enlace:hover {
             background-color: #0056b3;
         }
+        .nav-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .nav-right a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .nav-right a.login-btn {
+            background-color: #007bff;
+        }
+        .nav-right a.logout-btn {
+            background-color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -52,7 +70,13 @@
             <a href="/parte4" class="enlace">Paginas que cumplen las politicas de seguridad</a>
             <a href="/parte1-2" class="enlace">Paginas mas vulnerables</a>
         </div>
-
+    </div>
+    <div class="nav-right">
+        {% if current_user.is_authenticated %}
+            <a href="/logout" class="logout-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
     </div>
 </body>
 </html>

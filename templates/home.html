@@ -10,13 +10,10 @@
             background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
         .container {
             text-align: center;
+            padding: 20px;
         }
         h1 {
             color: #333;
@@ -43,6 +40,24 @@
         .enlaces .enlace:hover {
             background-color: #0056b3;
         }
+        .nav-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .nav-right a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .nav-right a.login-btn {
+            background-color: #007bff;
+        }
+        .nav-right a.logout-btn {
+            background-color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -62,6 +77,13 @@
             <a href="/Ej4API" class="enlace">Ejercicio 4 (API)</a>
             <a href="/ejercicio5" class="enlace">Ejercicio 5</a>
         </div>
+    </div>
+    <div class="nav-right">
+        {% if current_user.is_authenticated %}
+            <a href="/logout" class="logout-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
     </div>
 </body>
 </html>

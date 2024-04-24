@@ -35,6 +35,24 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .nav-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .nav-right a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .nav-right a.login-btn {
+            background-color: #007bff;
+        }
+        .nav-right a.logout-btn {
+            background-color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -43,7 +61,14 @@
             <i class="fas fa-crown"></i> <!-- Puedes cambiar el icono según tus preferencias -->
         </div>
         <h1>Panel de Administrador</h1>
-        <p>Solo admins</p>
+        <p>Solo admins para que sepas</p>
+    </div>
+    <div class="nav-right">
+        {% if current_user.is_authenticated %}
+            <a href="/logout" class="logout-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
     </div>
 </body>
 </html>

@@ -13,6 +13,7 @@
         h1 {
             text-align: center;
             margin-bottom: 20px;
+            margin-top: 60px;
         }
         table {
             width: 100%;
@@ -25,6 +26,24 @@
         }
         th {
             background-color: #f2f2f2;
+        }
+        .nav-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .nav-right a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .nav-right a.login-btn {
+            background-color: #007bff;
+        }
+        .nav-right a.logout-btn {
+            background-color: #dc3545;
         }
     </style>
 </head>
@@ -48,5 +67,12 @@
             {% endfor %}
         </tbody>
     </table>
+    <div class="nav-right">
+        {% if current_user.is_authenticated %}
+            <a href="/logout" class="logout-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
+    </div>
 </body>
 </html>
