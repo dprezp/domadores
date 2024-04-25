@@ -145,9 +145,6 @@ def ej5_modelos():
 @login_required
 def procesar_datos():
     data5 = ej5()
-    nombre = request.form['nombre']
-    telefono = int(request.form['telefono'])
-    provincia = request.form['provincia']
     permisos = int(request.form['permisos'])
     total_enviados = int(request.form['total_enviados'])
     total_phishing = int(request.form['total_phishing'])
@@ -161,26 +158,29 @@ def procesar_datos():
 
     test = [tasaPhishing, tasaClick, relPerSeg]
     test2D = np.asarray([test])
-
-    prediction = None
+    test1D = tasaClick + relPerSeg
+    test1D = np.asarray([test1D])
+    predict = None
 
     if metodo == 'regresionLineal':
         variable = data5['regresionLineal']
-        prediction = variable.predict(test2D)
+        predict = variable.predict(test1D.reshape(1, -1))
+        predict = np.clip(round(predict[0]), 0, 1)
+
     elif metodo == 'randomForest':
         variable = data5['randomForest']
-        prediction = variable.predict(test2D)
+        predict = variable.predict(test2D)
 
     elif metodo == 'decisionTree':
         variable = data5['decisionTree']
-        prediction = variable.predict(test2D)
+        predict = variable.predict(test2D)
 
-    if prediction == 1:
+    if predict == 1:
         prediction = "crítico"
     else:
         prediction = "no crítico"
 
-    return render_template('procesadoExitoso.html', prediction=prediction, current_user=current_user)
+    return render_template('procesadoExitoso.html', prediction=prediction, current_user=current_user, metodo=metodo)
 
 
 ###### LOGIN

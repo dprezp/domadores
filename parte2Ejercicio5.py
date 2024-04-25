@@ -11,7 +11,6 @@ from subprocess import call
 import graphviz
 
 
-
 def ej5():
     conn = sqlite3.connect('datos.db')
 
@@ -55,41 +54,45 @@ def ej5():
     y_pred = forest_model.predict(x_test)
     forest_score = accuracy_score(y_test, y_pred)
 
-    #Regresion lineal
+    # Regresion lineal
     x_regresion = x_train['permisos_seguros'] + x_train['tasa_clicados']
     x_regresion = x_regresion.values.reshape(-1, 1)
     linear_model = LinearRegression()
     linear_model = linear_model.fit(x_regresion, y_train)
     x_test_regresion = x_test['permisos_seguros'] + x_test['tasa_clicados']
-    x_test_regresion = x_test_regresion.values.reshape(-1,1)
+    x_test_regresion = x_test_regresion.values.reshape(-1, 1)
     y_pred = linear_model.predict(x_test_regresion)
     y_pred = np.round(y_pred)
     lineal_score = accuracy_score(y_test, y_pred)
 
-    #Imagen regresión lineal
+    # Imagen regresión lineal
     sorted_indices = np.argsort(x_test_regresion.flatten())
     x_test_regresion_sorted = x_test_regresion[sorted_indices]
     y_pred_sorted = y_pred[sorted_indices]
     plt.scatter(x_test_regresion, y_test, color="black")
     plt.plot(x_test_regresion_sorted, np.round(y_pred_sorted), color="blue", linewidth=3)
-    plt.xlabel('tasa de phishing')
+    plt.xlabel('Coeficiente de seguridad')
     plt.ylabel('Critico')
-    plt.title('Ajuste del modelo de regresión lineal en la variante tasa_phishing')
+    plt.title('Modelo de regresion lineal')
+    plt.savefig('static/regresionLineal.png')
     plt.show()
 
-    #Imagen Decision tree
-    dot_data = export_graphviz(tree_model, out_file=None, feature_names=x.columns, class_names=['No critico', 'critico'])
+
+    # Imagen Decision tree
+    dot_data = export_graphviz(tree_model, out_file=None, feature_names=x.columns,
+                               class_names=['No critico', 'critico'])
     graph = graphviz.Source(dot_data)
-    graph.render("critico", format ='png')
+    graph.render("decisionTree", format='png', directory='static')
 
-    #Imagen random forest
-    for i in range(0,9):
-       print(i)
-       estimator = forest_model.estimators_[i]
-       export_graphviz(estimator, out_file='tree.dot', feature_names=x.columns, class_names=['No critico', 'critico'])
-       call(['dot', '-Tpng', 'tree.dot', '-o', 'tree' + str(i) + '.png', '-Gdpi=600'])
-
-
+    # Imagen random forest
+    for i in range(0, 9):
+        # print(i)
+        estimator = forest_model.estimators_[i]
+        export_graphviz(estimator, out_file='tree.dot', feature_names=x.columns, class_names=['No critico', 'critico'])
+        if i == 0:
+            call(['dot', '-Tpng', 'tree.dot', '-o', 'static/randomForest' + '.png', '-Gdpi=600'])
+        else:
+            call(['dot', '-Tpng', 'tree.dot', '-o', 'static/randomForest' + str(i) + '.png', '-Gdpi=600'])
 
     sol = {
         'regresionLineal': linear_model,
@@ -97,6 +100,14 @@ def ej5():
         'decisionTree': tree_model,
     }
 
+
     conn.close()
 
     return sol
+
+
+"""
+if __name__ == '__main__':
+    sol = ej5()
+    print(sol)
+"""
