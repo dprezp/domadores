@@ -137,8 +137,7 @@ def ej1_2():
 @app.route('/ejercicio5', methods=["GET", "POST"])
 @login_required
 def ej5_modelos():
-    data5 = ej5()
-    return render_template('ejercicio5.html', **data5, current_user=current_user)
+    return render_template('ejercicio5.html', current_user=current_user)
 
 
 @app.route('/procesado', methods=['GET', 'POST'])
@@ -152,35 +151,38 @@ def procesar_datos():
     segura = int(request.form['passSegura'])
     metodo = request.form['metodo']
 
-    tasaPhishing = total_phishing / total_enviados
-    tasaClick = total_clicados / total_phishing
-    relPerSeg = (permisos == 1) & (segura == 0)
-
-    test = [tasaPhishing, tasaClick, relPerSeg]
-    test2D = np.asarray([test])
-    test1D = tasaClick + relPerSeg
-    test1D = np.asarray([test1D])
-    predict = None
-
-    if metodo == 'regresionLineal':
-        variable = data5['regresionLineal']
-        predict = variable.predict(test1D.reshape(1, -1))
-        predict = np.clip(round(predict[0]), 0, 1)
-
-    elif metodo == 'randomForest':
-        variable = data5['randomForest']
-        predict = variable.predict(test2D)
-
-    elif metodo == 'decisionTree':
-        variable = data5['decisionTree']
-        predict = variable.predict(test2D)
-
-    if predict == 1:
-        prediction = "crítico"
+    if total_enviados < total_phishing:
+        return render_template('ejercicio5.html', current_user=current_user)
     else:
-        prediction = "no crítico"
+        tasaPhishing = total_phishing / total_enviados
+        tasaClick = total_clicados / total_phishing
+        relPerSeg = (permisos == 1) & (segura == 0)
 
-    return render_template('procesadoExitoso.html', prediction=prediction, current_user=current_user, metodo=metodo)
+        test = [tasaPhishing, tasaClick, relPerSeg]
+        test2D = np.asarray([test])
+        test1D = tasaClick + relPerSeg
+        test1D = np.asarray([test1D])
+        predict = None
+
+        if metodo == 'regresionLineal':
+            variable = data5['regresionLineal']
+            predict = variable.predict(test1D.reshape(1, -1))
+            predict = np.clip(round(predict[0]), 0, 1)
+
+        elif metodo == 'randomForest':
+            variable = data5['randomForest']
+            predict = variable.predict(test2D)
+
+        elif metodo == 'decisionTree':
+            variable = data5['decisionTree']
+            predict = variable.predict(test2D)
+
+        if predict == 1:
+            prediction = "crítico"
+        else:
+            prediction = "no crítico"
+
+        return render_template('procesadoExitoso.html', prediction=prediction, current_user=current_user, metodo=metodo)
 
 
 ###### LOGIN

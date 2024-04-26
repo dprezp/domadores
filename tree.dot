@@ -1,13 +1,13 @@
 digraph Tree {
 node [shape=box, fontname="helvetica"] ;
 edge [fontname="helvetica"] ;
-0 [label="tasa_clicados <= 0.334\ngini = 0.499\nsamples = 11\nvalue = [10, 9]\nclass = No critico"] ;
-1 [label="gini = 0.0\nsamples = 4\nvalue = [6, 0]\nclass = No critico"] ;
+0 [label="tasa_clicados <= 0.319\ngini = 0.432\nsamples = 12\nvalue = [13, 6]\nclass = No critico"] ;
+1 [label="gini = 0.0\nsamples = 3\nvalue = [8, 0]\nclass = No critico"] ;
 0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
-2 [label="tasa_phishing <= 0.194\ngini = 0.426\nsamples = 7\nvalue = [4, 9]\nclass = critico"] ;
+2 [label="tasa_phishing <= 0.19\ngini = 0.496\nsamples = 9\nvalue = [5, 6]\nclass = critico"] ;
 0 -> 2 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
-3 [label="gini = 0.0\nsamples = 2\nvalue = [4, 0]\nclass = No critico"] ;
+3 [label="gini = 0.0\nsamples = 3\nvalue = [5, 0]\nclass = No critico"] ;
 2 -> 3 ;
-4 [label="gini = 0.0\nsamples = 5\nvalue = [0, 9]\nclass = critico"] ;
+4 [label="gini = 0.0\nsamples = 6\nvalue = [0, 6]\nclass = critico"] ;
 2 -> 4 ;
 }

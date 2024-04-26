@@ -83,28 +83,28 @@
         <h1>Formulario de Usuario CMI</h1>
         <form action="/procesado" method="post">
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" pattern="[A-Za-zñÑ\s]+" title="Aceptamos solo letras y espacios." required>
+            <input type="text" id="nombre" name="nombre" pattern="[A-Za-zñÑ\s]+" title="Aceptamos solo letras y espacios." placeholder="Nombre (letras y espacios)" required>
 
             <label for="telefono">Teléfono:</label>
-            <input type="number" id="telefono" name="telefono" required>
+            <input type="number" id="telefono" name="telefono" placeholder="Teléfono (número)" required>
 
             <label for="provincia">Provincia:</label>
-            <input type="text" id="provincia" name="provincia" pattern="[A-Za-zñÑ\s]+" title="Aceptamos solo letras y espacios." required>
+            <input type="text" id="provincia" name="provincia" pattern="[A-Za-zñÑ\s]+" title="Aceptamos solo letras y espacios." placeholder="Provincia (letras y espacios)" required>
 
             <label for="permisos">Permisos:</label>
-            <input type="number" id="permisos" name="permisos" min="0" max="1" step="1" required>
+            <input type="number" id="permisos" name="permisos" min="0" max="1" step="1" placeholder="Permisos (0 o 1)" required>
 
             <label for="total_enviados">Total de Emails Enviados:</label>
-            <input type="number" id="total_enviados" name="total_enviados" required>
+            <input type="number" id="total_enviados" name="total_enviados" placeholder="Enviados (número)" required>
 
             <label for="total_phishing">Total de Emails con Phishing:</label>
-            <input type="number" id="total_phishing" name="total_phishing" required>
+            <input type="number" id="total_phishing" name="total_phishing" placeholder="Phishing (número menor o igual que 'Enviados')" required>
 
             <label for="total_clicados">Total de Emails Clicados:</label>
-            <input type="number" id="total_clicados" name="total_clicados" required>
+            <input type="number" id="total_clicados" name="total_clicados" placeholder="Clicados (número)" required>
 
             <label for="passSegura">Contraseña segura?:</label>
-            <input type="number" id="passSegura" name="passSegura" min="0" max="1" step="1" required>
+            <input type="number" id="passSegura" name="passSegura" min="0" max="1" step="1" placeholder="Seguridad (0 o 1)" required>
 
             <label for="metodo">Método de Inteligencia Artificial:</label>
             <select id="metodo" name="metodo" required>
